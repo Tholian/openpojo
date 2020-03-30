@@ -18,11 +18,6 @@
 
 package com.openpojo.reflection.impl;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Modifier;
-import java.util.LinkedList;
-import java.util.List;
-
 import com.openpojo.business.BusinessIdentity;
 import com.openpojo.random.RandomFactory;
 import com.openpojo.reflection.PojoClass;
@@ -39,6 +34,11 @@ import com.openpojo.reflection.java.Java;
 import com.openpojo.validation.affirm.Affirm;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Modifier;
+import java.util.LinkedList;
+import java.util.List;
 
 /*
  * TODO: This test class needs to be re-worked, to focus on just the PojoClassImpl not across services, i.e.
@@ -124,7 +124,6 @@ public class PojoClassImplTest {
   }
 
   @Test
-  @SuppressWarnings("PointlessArithmeticExpression")
   public void testGetPojoMethods() {
     PojoClass pojoClass = getPojoClassImplForClass(AClassWithSixMethods.class);
     Affirm.affirmEquals(String.format("Methods added/removed from class=[%s] found methods=[%s]", pojoClass.getName(),
@@ -345,7 +344,6 @@ public class PojoClassImplTest {
   }
 
   @Test
-  @SuppressWarnings("ObjectEqualsNull")
   public void testEqualsReturnsFalseWhenOtherIsNull() {
     final PojoClass pojoClass = getPojoClassImplForClass(this.getClass());
     Affirm.affirmFalse("equals(null) should return false", pojoClass.equals(null));
@@ -382,10 +380,11 @@ public class PojoClassImplTest {
     PojoClass pojoClass = getPojoClassImplForClass(this.getClass());
 
     String sourcePath = pojoClass.getSourcePath();
-    Affirm.affirmTrue("Should start with file:// [" + sourcePath + "]", sourcePath.startsWith("file://"));
+    // A valid file URI must therefore begin with either file:/path, file:///path or file://hostname/path  -  from https://en.wikipedia.org/wiki/File_URI_scheme
+    Affirm.affirmTrue("Should start with file:/ [" + sourcePath + "]", sourcePath.startsWith("file:/"));
 
     String thisClassEndingPath = this.getClass().getName().replace(Java.PACKAGE_DELIMITER, Java.PATH_DELIMITER) + Java
-        .CLASS_EXTENSION;
+            .CLASS_EXTENSION;
     Affirm.affirmTrue("Should end with this class's package path [" + sourcePath + "]", sourcePath.endsWith(thisClassEndingPath));
   }
 

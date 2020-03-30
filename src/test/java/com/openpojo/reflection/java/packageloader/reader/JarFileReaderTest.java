@@ -18,9 +18,6 @@
 
 package com.openpojo.reflection.java.packageloader.reader;
 
-import java.net.URL;
-import java.util.Set;
-
 import com.openpojo.reflection.PojoClass;
 import com.openpojo.reflection.PojoMethod;
 import com.openpojo.reflection.impl.PojoClassFactory;
@@ -29,6 +26,10 @@ import com.openpojo.utils.samplejar.SampleJar;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.io.File;
+import java.net.URL;
+import java.util.Set;
 
 /**
  * @author oshoukry
@@ -111,8 +112,9 @@ public class JarFileReaderTest {
     classPath += Java.CLASSPATH_DELIMITER + System.getProperty("sun.boot.class.path");
     String[] classPathParts = classPath.split(Java.CLASSPATH_DELIMITER);
     for (String entry : classPathParts) {
-      if (entry.endsWith(Java.PATH_DELIMITER + jarFileName))
+      if (entry.endsWith(File.separator + jarFileName)) {
         return entry;
+      }
     }
     return null;
   }

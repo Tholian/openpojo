@@ -18,12 +18,12 @@
 
 package com.openpojo.reflection.java.packageloader.impl;
 
+import com.openpojo.reflection.exception.ReflectionException;
+
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-
-import com.openpojo.reflection.exception.ReflectionException;
 
 /**
  * @author oshoukry
@@ -34,29 +34,14 @@ public class URLToFileSystemAdapter {
   private static final String PROTOCOL_SEPARATOR = "://";
   private static final String PROTOCOL_SEPARATOR_SHORT = ":";
 
-  private String protocol;
-  private final String authority;
-  private final String host;
-  private final String ref;
-  private final String query;
-  private String path;
-  private final int port;
+  private final URL url;
 
   public URLToFileSystemAdapter(final URL url) {
-    if (url == null)
+    if (url == null) {
       throw ReflectionException.getInstance("Null URL not allowed");
+    }
+    this.url = url;
 
-    if (url.getAuthority() != null && url.getAuthority().length() > 0)
-      this.authority = url.getAuthority();
-    else
-      this.authority = null;
-    this.host = url.getHost();
-    this.ref = url.getRef();
-    this.query = url.getQuery();
-    this.port = url.getPort();
-    this.protocol = url.getProtocol();
-    this.path = decodeString(url.getPath());
-    fixProtocolAndPath();
   }
 
   /*
@@ -66,18 +51,29 @@ public class URLToFileSystemAdapter {
    *
    * The fix here is to switch the protocol to file://.
    */
-  private void fixProtocolAndPath() {
-    if (protocol.equals(JAR_PROTOCOL) && path.startsWith(FILE_PROTOCOL)) {
-      this.protocol = FILE_PROTOCOL;
-      int length = FILE_PROTOCOL.length() + (path.contains(PROTOCOL_SEPARATOR) ? PROTOCOL_SEPARATOR.length()
-          : PROTOCOL_SEPARATOR_SHORT.length());
-      this.path = path.substring(length);
-    }
+  //  private void fixProtocolAndPath() {
+  //    if (protocol.equals(JAR_PROTOCOL) && path.startsWith(FILE_PROTOCOL)) {
+  //      this.protocol = FILE_PROTOCOL;
+  //      int length = FILE_PROTOCOL.length() + (path.contains(PROTOCOL_SEPARATOR) ? PROTOCOL_SEPARATOR.length()
+  //              : PROTOCOL_SEPARATOR_SHORT.length());
+  //      this.path = path.substring(length);
+  //    }
+  //  }
+
+  private String determineFixedPath() {
+    int length = FILE_PROTOCOL.length() + (url.getPath().contains(PROTOCOL_SEPARATOR) ? PROTOCOL_SEPARATOR.length()
+            : PROTOCOL_SEPARATOR_SHORT.length());
+    return url.getPath().substring(length);
   }
 
   public URI getAsURI() {
     try {
-      return new URI(protocol, authority, host, port, path, query, ref);
+
+      if (JAR_PROTOCOL.equalsIgnoreCase(url.getProtocol()) && url.getPath().startsWith(FILE_PROTOCOL)) {
+        return new URI(FILE_PROTOCOL, url.getAuthority(), url.getHost(), url.getPort(), determineFixedPath(), url.getQuery(), url.getRef());
+      }
+
+      return url.toURI();
     } catch (final URISyntaxException uriSyntaxException) {
       throw ReflectionException.getInstance(uriSyntaxException.getMessage(), uriSyntaxException);
     }

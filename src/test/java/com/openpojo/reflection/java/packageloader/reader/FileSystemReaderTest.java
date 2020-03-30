@@ -18,10 +18,6 @@
 
 package com.openpojo.reflection.java.packageloader.reader;
 
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-
 import com.openpojo.random.RandomFactory;
 import com.openpojo.reflection.exception.ReflectionException;
 import com.openpojo.reflection.java.packageloader.impl.URLToFileSystemAdapter;
@@ -29,11 +25,13 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 /**
  * @author oshoukry
@@ -44,8 +42,9 @@ public class FileSystemReaderTest {
   @Before
   public void setup() {
     file = new File(System.getProperty("user.dir")
-        + File.separator + ".tmp.testing.folder." + RandomFactory.getRandomValue(String.class));
+            + File.separator + "tmp.testing.folder." + RandomFactory.getRandomValue(String.class));
     file.mkdir();
+    file.deleteOnExit();
   }
 
   @After
