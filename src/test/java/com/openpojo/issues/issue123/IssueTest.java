@@ -18,16 +18,16 @@
 
 package com.openpojo.issues.issue123;
 
-import java.net.URL;
-
 import com.openpojo.reflection.PojoClass;
 import com.openpojo.reflection.impl.PojoClassFactory;
 import com.openpojo.reflection.java.Java;
 import com.openpojo.reflection.java.load.ClassUtil;
 import org.junit.Test;
 
+import java.net.URL;
+
 import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 public class IssueTest {
 
@@ -62,7 +62,7 @@ public class IssueTest {
     static String className = "org.objectweb.asm.ClassWriter";
 
     static String expectedPathStartsWith = "file:/";
-    static String expectedPathContains1 = "/.m2/repository/org/ow2/asm/asm/";
+    static String expectedPathContains1 = "/org/ow2/asm/asm/";
     static String expectedPathContains2 = ".jar";
     static String expectedPathEndsWith = className.replace(Java.PACKAGE_DELIMITER, Java.PATH_DELIMITER) + Java.CLASS_EXTENSION;
   }

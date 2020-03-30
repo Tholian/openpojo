@@ -23,11 +23,15 @@ import java.io.File;
 /**
  * @author oshoukry
  */
-public interface Java {
-  char PACKAGE_DELIMITER = '.';
-  char PATH_DELIMITER = '/';
-  char JAR_FILE_PATH_SEPARATOR = '!';
-  String CLASS_EXTENSION = ".class";
-  String PACKAGE_INFO = "package-info";
-  String CLASSPATH_DELIMITER = File.pathSeparator;
+public final class Java {
+  public static final String PACKAGE_DELIMITER = ".";
+  public static final String PATH_DELIMITER = File.separator;
+  public static final char JAR_FILE_PATH_SEPARATOR = '!';
+  public static final String CLASS_EXTENSION = ".class";
+  public static final String PACKAGE_INFO = "package-info";
+  public static final String CLASSPATH_DELIMITER = File.pathSeparator;
+
+  private Java() {
+    // ensure no instance is created
+  }
 }

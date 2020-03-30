@@ -90,7 +90,7 @@ public class HelperTest {
 
   @Test
   public void whenGetFQClassNameReplacePathDelimiters() {
-    char slash = Java.PATH_DELIMITER;
+    String slash = Java.PATH_DELIMITER;
     String someEntry = "com" + slash + "package" + slash + "className" + Java.CLASS_EXTENSION;
     String expected = "com.package.className";
     Assert.assertEquals(expected, Helper.getFQClassName(someEntry));
